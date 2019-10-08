@@ -1,0 +1,44 @@
+apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+apply from: '../dependencies.gradle'
+
+apply from: '../bintrayconfig.gradle'
+
+android {
+    compileSdkVersion versions.compileSdk
+    buildToolsVersion versions.buildTools
+
+    compileOptions {
+        sourceCompatibility 1.8
+        targetCompatibility 1.8
+
+        if (modulePackageId != null && modulePackageId != '') {
+            logger.warn('Package for current module: ' + modulePackageId)
+            kotlinOptions.freeCompilerArgs += ['-module-name', modulePackageId]
+        } else {
+            logger.warn('Skipping setting compiler module name, no package to use.')
+        }
+    }
+
+    defaultConfig {
+        minSdkVersion versions.minSdk
+        targetSdkVersion versions.compileSdk
+        versionCode versions.publishVersionCode
+        versionName versions.publishVersion
+    }
+
+    sourceSets {
+        main.res.srcDirs = [
+                'src/main/res',
+                'src/main/res-public'
+        ]
+    }
+}
+
+dependencies {
+    implementation 'androidx.appcompat:appcompat:' + versions.androidx
+    implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk8:' + versions.kotlin
+    api 'com.google.android.material:material:' + versions.material
+}
+
+apply from: '../spotless.gradle'
