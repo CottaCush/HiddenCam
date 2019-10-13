@@ -1,5 +1,5 @@
 ext.versions = [
-        minSdk            : 19,
+        minSdk            : 21,
         compileSdk        : 29,
         buildTools        : '29.0.0',
         publishVersion    : '0.0.3',
@@ -14,5 +14,7 @@ ext.versions = [
         ktx               : '1.0.2',
         androidx          : '1.0.2',
 
-        material          : '1.1.0-alpha07',
+        cameraX          : '1.0.0-alpha06',
 ]
+
+
