@@ -14,7 +14,7 @@ ext.versions = [
         ktx               : '1.0.2',
         androidx          : '1.0.2',
 
-        cameraX          : '1.0.0-alpha06',
+        cameraX          : '1.0.0-alpha05',
 ]
 
 

@@ -8,10 +8,10 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 private const val DEFAULT_FILENAME = "yyyy-MM-dd-HH-mm-ss-SSS"
-private const val PHOTO_EXTENSION = ".jpg"
+private const val DEFAULT_PHOTO_EXTENSION = ".jpg"
 
 
-fun getDefaultDisplaySize(context: Context): Point {
+internal fun getDefaultDisplaySize(context: Context): Point {
     val display =
         (context.getSystemService(Context.WINDOW_SERVICE) as WindowManager).defaultDisplay
     val size = Point()
@@ -19,8 +19,11 @@ fun getDefaultDisplaySize(context: Context): Point {
     return size
 }
 
-private fun createFile(
-    baseFolder: File,
-    format: String = DEFAULT_FILENAME,
-    extension: String = PHOTO_EXTENSION
-) = File(baseFolder, SimpleDateFormat(format, Locale.US).format(System.currentTimeMillis()) + extension)
+internal fun createFile(
+    baseDirectory: File
+): File = File(
+    baseDirectory, SimpleDateFormat(DEFAULT_FILENAME, Locale.US)
+        .format(System.currentTimeMillis()) + DEFAULT_PHOTO_EXTENSION
+)
+
+//TODO be sure to tell the users to cleanup the files in the directory provided
