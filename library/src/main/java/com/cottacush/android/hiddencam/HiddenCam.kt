@@ -11,29 +11,40 @@ import java.io.File
 
 //TODO remove all Logs once we are done?.
 
-class HiddenCam(private val context: Context, private val baseFileDirectory: File) {
+//TODO accept timer & schedule information, schedule captures.
 
-    lateinit var imageCapture: ImageCapture
-    private lateinit var imageCaptureConfig: ImageCaptureConfig
+class HiddenCam(
+    private val context: Context, private val baseFileDirectory: File,
+    private val aspectRatio: Rational = getDefaultAspectRatio(context),
+    private val cameraResolution: Size = getDefaultScreenResoultion(context),
+    private val cameraFacingDirection: CameraX.LensFacing = CameraX.LensFacing.FRONT
+    // TODO add more configurable inputs here. Provide default values if needed
+
+) {
+
     private val lifeCycleOwner = HiddenCamLifeCycleOwner()
+    private var imageCapture: ImageCapture
+    private var imageCaptureConfig: ImageCaptureConfig = ImageCaptureConfig.Builder()
+        .apply {
+            setLensFacing(cameraFacingDirection)
+            setTargetResolution(cameraResolution)
+            setTargetAspectRatio(aspectRatio) // TODO make this configurable?
+            setCaptureMode(ImageCapture.CaptureMode.MIN_LATENCY)// TODO experiment with all possible capture modes to see which one gives clear picture
 
-    private val displaySize = getDefaultDisplaySize(context)
+
+            //TODO make other necessary configurations, to get best picture
 
 
+        }.build()
 
-    companion object {
-        private const val TAG = "HiddenCam"
+    init {
+        imageCapture = ImageCapture(imageCaptureConfig)
+        CameraX.bindToLifecycle(lifeCycleOwner, imageCapture)
     }
-
-
-
-    //TODO implement a builder pattern and to get information for ImageCaptureConfig
-
 
 
     //Start: -- Cam Engine life cycle
     fun start() {
-        imageCapture = ImageCapture(imageCaptureConfig)
         lifeCycleOwner.start()
     }
 
@@ -42,30 +53,7 @@ class HiddenCam(private val context: Context, private val baseFileDirectory: Fil
         lifeCycleOwner.tearDown()
     }
 
-
     //End: -- Cam Engine life cycle
-
-
-    init {
-
-        //TODO set default for the properties needed to configure
-        // ImageCaptureConfig.Builder()
-        aspectRatio = Rational(displaySize.x, displaySize.y)
-
-    }
-
-
-    private fun buildImageCaptureConfig() {
-        imageCaptureConfig = ImageCaptureConfig.Builder()
-            .apply {
-                setTargetResolution(cameraResolution)
-                setTargetAspectRatio(aspectRatio) // TODO make this configurable ?
-                setCaptureMode(ImageCapture.CaptureMode.MIN_LATENCY)// TODO experiment with all possible capture modes to see which one gives best picture
-                //TODO make other necessary configurations, to get best picture
-
-            }.build()
-
-    }
 
     fun capture() {
         imageCapture.takePicture(
@@ -88,5 +76,10 @@ class HiddenCam(private val context: Context, private val baseFileDirectory: Fil
                 }
             })
     }
+
+    companion object {
+        private const val TAG = "HiddenCam"
+    }
+
 }
 
