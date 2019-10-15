@@ -48,8 +48,11 @@ class HiddenCam(
         lifeCycleOwner.start()
     }
 
+    fun stop() {
+        lifeCycleOwner.stop()
+    }
 
-    fun destroy() {
+    fun tearDown() {
         lifeCycleOwner.tearDown()
     }
 
@@ -72,6 +75,7 @@ class HiddenCam(
                 override fun onImageSaved(file: File) {
                     val msg = "Photo capture succeeded: ${file.absolutePath}"
                     //TODO report back to the listener
+                    //TODO should we stop capturing after one error? ... or we should keep trying based on the schedule timer?
                     Log.d(TAG, msg)
                 }
             })

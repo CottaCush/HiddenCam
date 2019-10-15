@@ -12,7 +12,6 @@ import java.util.*
 private const val DEFAULT_FILENAME = "yyyy-MM-dd-HH-mm-ss-SSS"
 private const val DEFAULT_PHOTO_EXTENSION = ".jpg"
 
-
 internal fun getDefaultDisplaySize(context: Context): Point {
     val display =
         (context.getSystemService(Context.WINDOW_SERVICE) as WindowManager).defaultDisplay
