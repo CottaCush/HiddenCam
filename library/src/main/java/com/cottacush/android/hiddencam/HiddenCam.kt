@@ -16,7 +16,6 @@ import java.io.File
 
 class HiddenCam(
     private val context: Context, private val baseFileDirectory: File,
-    private val interval: Long, private val totalTime: Long,
     private val aspectRatio: Rational = getDefaultAspectRatio(context),
     private val cameraResolution: Size = getDefaultScreenResoultion(context),
     private val cameraFacingDirection: CameraX.LensFacing = CameraX.LensFacing.FRONT
@@ -24,6 +23,7 @@ class HiddenCam(
 
 ) {
 
+    private lateinit var timer: CountDownTimer
     private val lifeCycleOwner = HiddenCamLifeCycleOwner()
     private var imageCapture: ImageCapture
     private var imageCaptureConfig: ImageCaptureConfig = ImageCaptureConfig.Builder()
@@ -42,11 +42,10 @@ class HiddenCam(
     init {
         imageCapture = ImageCapture(imageCaptureConfig)
         CameraX.bindToLifecycle(lifeCycleOwner, imageCapture)
-        startCameraSchedule()
     }
 
-    private fun startCameraSchedule() {
-        object : CountDownTimer(totalTime * ONE_SECOND, interval * ONE_SECOND) {
+    fun startCameraSession(interval: Long, totalTime: Long) {
+        timer = object : CountDownTimer(totalTime * ONE_SECOND, interval * ONE_SECOND) {
             override fun onFinish() {
                 //TODO We are done with the interval. Should we tear the camera down?
             }
@@ -56,6 +55,11 @@ class HiddenCam(
             }
 
         }
+        timer.start()
+    }
+
+    fun stopCameraSession() {
+        timer.cancel()
     }
 
     //Start: -- Cam Engine life cycle
