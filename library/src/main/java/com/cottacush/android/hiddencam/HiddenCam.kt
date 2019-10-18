@@ -1,6 +1,7 @@
 package com.cottacush.android.hiddencam
 
 import android.content.Context
+import android.os.CountDownTimer
 import android.util.Log
 import android.util.Rational
 import android.util.Size
@@ -11,10 +12,11 @@ import java.io.File
 
 //TODO remove all Logs once we are done?.
 
-//TODO accept timer & schedule information, schedule captures.
+//TODO Idea: Timer can be set to default values zero and zero for single images capture
 
 class HiddenCam(
     private val context: Context, private val baseFileDirectory: File,
+    private val interval: Long, private val totalTime: Long,
     private val aspectRatio: Rational = getDefaultAspectRatio(context),
     private val cameraResolution: Size = getDefaultScreenResoultion(context),
     private val cameraFacingDirection: CameraX.LensFacing = CameraX.LensFacing.FRONT
@@ -40,8 +42,21 @@ class HiddenCam(
     init {
         imageCapture = ImageCapture(imageCaptureConfig)
         CameraX.bindToLifecycle(lifeCycleOwner, imageCapture)
+        startCameraSchedule()
     }
 
+    private fun startCameraSchedule() {
+        object : CountDownTimer(totalTime * ONE_SECOND, interval * ONE_SECOND) {
+            override fun onFinish() {
+                //TODO We are done with the interval. Should we tear the camera down?
+            }
+
+            override fun onTick(p0: Long) {
+                capture()
+            }
+
+        }
+    }
 
     //Start: -- Cam Engine life cycle
     fun start() {
@@ -83,6 +98,8 @@ class HiddenCam(
 
     companion object {
         private const val TAG = "HiddenCam"
+        // Number of milliseconds in a second
+        const val ONE_SECOND = 1000L
     }
 
 }
