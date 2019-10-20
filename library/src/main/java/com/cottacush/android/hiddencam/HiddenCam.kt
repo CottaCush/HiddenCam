@@ -8,22 +8,22 @@ import android.util.Size
 import androidx.camera.core.CameraX
 import androidx.camera.core.ImageCapture
 import androidx.camera.core.ImageCaptureConfig
+import androidx.camera.core.UseCase
+import com.cottacush.android.hiddencam.CaptureTimerHandler.Companion.DEFAULT_CAPTURE_INTERVAL
 import java.io.File
-
-//TODO remove all Logs once we are done?.
 
 //TODO Idea: Timer can be set to default values zero and zero for single images capture
 
 class HiddenCam(
+    captureInterval: Long = DEFAULT_CAPTURE_INTERVAL,
     private val context: Context, private val baseFileDirectory: File,
     private val aspectRatio: Rational = getDefaultAspectRatio(context),
     private val cameraResolution: Size = getDefaultScreenResoultion(context),
-    private val cameraFacingDirection: CameraX.LensFacing = CameraX.LensFacing.FRONT
+    private val cameraFacingDirection: CameraX.LensFacing = CameraX.LensFacing.FRONT,
+    private val imageCapturedListener: OnImageCapturedListener
     // TODO add more configurable inputs here. Provide default values if needed
-
 ) {
-
-    private lateinit var timer: CountDownTimer
+    private val captureTimer: CaptureTimerHandler
     private val lifeCycleOwner = HiddenCamLifeCycleOwner()
     private var imageCapture: ImageCapture
     private var imageCaptureConfig: ImageCaptureConfig = ImageCaptureConfig.Builder()
@@ -33,51 +33,37 @@ class HiddenCam(
             setTargetAspectRatio(aspectRatio) // TODO make this configurable?
             setCaptureMode(ImageCapture.CaptureMode.MIN_LATENCY)// TODO experiment with all possible capture modes to see which one gives clear picture
 
-
             //TODO make other necessary configurations, to get best picture
-
 
         }.build()
 
     init {
         imageCapture = ImageCapture(imageCaptureConfig)
         CameraX.bindToLifecycle(lifeCycleOwner, imageCapture)
-    }
-
-    fun startCameraSession(interval: Long, totalTime: Long) {
-        timer = object : CountDownTimer(totalTime * ONE_SECOND, interval * ONE_SECOND) {
-            override fun onFinish() {
-                //TODO We are done with the interval. Should we tear the camera down?
-            }
-
-            override fun onTick(p0: Long) {
-                capture()
-            }
-
+        captureTimer = CaptureTimerHandler(captureInterval) {
+            capture()
         }
-        timer.start()
-    }
-
-    fun stopCameraSession() {
-        timer.cancel()
     }
 
     //Start: -- Cam Engine life cycle
     fun start() {
         lifeCycleOwner.start()
+        captureTimer.startUpdates()
     }
 
     fun stop() {
+        captureTimer.stopUpdates()
         lifeCycleOwner.stop()
     }
 
     fun tearDown() {
+        captureTimer.stopUpdates()
         lifeCycleOwner.tearDown()
     }
 
     //End: -- Cam Engine life cycle
 
-    fun capture() {
+    private fun capture() {
         imageCapture.takePicture(
             createFile(baseFileDirectory),
             object : ImageCapture.OnImageSavedListener {
@@ -86,25 +72,19 @@ class HiddenCam(
                     message: String,
                     cause: Throwable?
                 ) {
-                    //TODO report back to the listener
                     Log.e(TAG, "Photo capture failed: $message")
-                    cause?.printStackTrace()
+                    imageCapturedListener.onError(cause)
                 }
 
                 override fun onImageSaved(file: File) {
-                    val msg = "Photo capture succeeded: ${file.absolutePath}"
-                    //TODO report back to the listener
-                    //TODO should we stop capturing after one error? ... or we should keep trying based on the schedule timer?
-                    Log.d(TAG, msg)
+                    Log.d(TAG, "Photo capture succeeded: ${file.absolutePath}")
+                    imageCapturedListener.onImageCaptured(file)
                 }
             })
     }
 
     companion object {
-        private const val TAG = "HiddenCam"
-        // Number of milliseconds in a second
-        const val ONE_SECOND = 1000L
+        private const val TAG = "HIDDEN_CAM"
     }
-
 }
 
