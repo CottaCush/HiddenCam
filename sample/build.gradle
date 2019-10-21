@@ -29,6 +29,7 @@ dependencies {
     implementation 'androidx.core:core-ktx:' + versions.ktx
     implementation 'androidx.appcompat:appcompat:' + versions.androidx
     implementation 'com.android.support.constraint:constraint-layout:' + versions.constraintLayout
+    implementation 'com.google.android.material:material:' + versions.androidxMaterial
 }
 
 apply from: '../spotless.gradle'

@@ -15,12 +15,12 @@ import java.io.File
 //TODO Idea: Timer can be set to default values zero and zero for single images capture
 
 class HiddenCam(
-    captureInterval: Long = DEFAULT_CAPTURE_INTERVAL,
     private val context: Context, private val baseFileDirectory: File,
+    private val imageCapturedListener: OnImageCapturedListener,
+    captureInterval: Long = DEFAULT_CAPTURE_INTERVAL,
     private val aspectRatio: Rational = getDefaultAspectRatio(context),
     private val cameraResolution: Size = getDefaultScreenResoultion(context),
-    private val cameraFacingDirection: CameraX.LensFacing = CameraX.LensFacing.FRONT,
-    private val imageCapturedListener: OnImageCapturedListener
+    private val cameraFacingDirection: CameraX.LensFacing = CameraX.LensFacing.FRONT
     // TODO add more configurable inputs here. Provide default values if needed
 ) {
     private val captureTimer: CaptureTimerHandler
@@ -38,6 +38,9 @@ class HiddenCam(
         }.build()
 
     init {
+        if (!context.hasPermissions()) {
+            imageCapturedListener.onImageCaptureError(Throwable("You need to have access to both CAMERA and WRITE_EXTERNAL_STORAGE permissions"))
+        }
         imageCapture = ImageCapture(imageCaptureConfig)
         CameraX.bindToLifecycle(lifeCycleOwner, imageCapture)
         captureTimer = CaptureTimerHandler(captureInterval) {
@@ -56,7 +59,7 @@ class HiddenCam(
         lifeCycleOwner.stop()
     }
 
-    fun tearDown() {
+    fun destroy() {
         captureTimer.stopUpdates()
         lifeCycleOwner.tearDown()
     }
@@ -73,7 +76,7 @@ class HiddenCam(
                     cause: Throwable?
                 ) {
                     Log.e(TAG, "Photo capture failed: $message")
-                    imageCapturedListener.onError(cause)
+                    imageCapturedListener.onImageCaptureError(cause)
                 }
 
                 override fun onImageSaved(file: File) {

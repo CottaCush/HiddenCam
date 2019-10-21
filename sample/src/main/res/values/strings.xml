@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">HiddenCam</string>
+    <string name="start_capture">Start Capture</string>
 </resources>
