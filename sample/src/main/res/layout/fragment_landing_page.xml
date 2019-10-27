@@ -5,7 +5,7 @@
         android:layout_height="match_parent">
 
     <com.google.android.material.button.MaterialButton
-            android:id="@+id/startCaptureButton"
+            android:id="@+id/oneShotButton"
             style="@style/Widget.MaterialComponents.Button.Icon"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -14,9 +14,9 @@
             android:layout_marginEnd="50dp"
             android:layout_marginBottom="20dp"
             android:padding="16dp"
-            android:text="@string/start_capture"
+            android:text="One Shot"
             app:cornerRadius="24dp"
-            app:layout_constraintBottom_toTopOf="@+id/stopCaptureButton"
+            app:layout_constraintBottom_toTopOf="@+id/recurringButton"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
@@ -24,7 +24,7 @@
             app:layout_constraintVertical_chainStyle="packed" />
 
     <com.google.android.material.button.MaterialButton
-            android:id="@+id/stopCaptureButton"
+            android:id="@+id/recurringButton"
             style="@style/Widget.MaterialComponents.Button.Icon"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -32,12 +32,12 @@
             android:layout_marginEnd="50dp"
             android:layout_marginBottom="30dp"
             android:padding="16dp"
-            android:text="Stop Capture"
+            android:text="Recurring"
             app:cornerRadius="24dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/startCaptureButton"
+            app:layout_constraintTop_toBottomOf="@+id/oneShotButton"
             app:layout_constraintVertical_bias="0.72" />
 </androidx.constraintlayout.widget.ConstraintLayout>

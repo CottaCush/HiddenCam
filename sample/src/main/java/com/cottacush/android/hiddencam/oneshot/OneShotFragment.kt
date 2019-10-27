@@ -1,4 +1,4 @@
-package com.cottacush.android.hiddencam.recurring
+package com.cottacush.android.hiddencam.oneshot
 
 import android.os.Bundle
 import android.util.Log
@@ -11,10 +11,10 @@ import com.cottacush.android.R
 import com.cottacush.android.hiddencam.HiddenCam
 import com.cottacush.android.hiddencam.MainActivity
 import com.cottacush.android.hiddencam.OnImageCapturedListener
-import kotlinx.android.synthetic.main.fragment_recurring.*
+import kotlinx.android.synthetic.main.fragment_oneshot.*
 import java.io.File
 
-class RecurringFragment : Fragment(), OnImageCapturedListener {
+class OneShotFragment : Fragment(), OnImageCapturedListener {
 
     private val mainActivity: MainActivity
         get() {
@@ -27,7 +27,7 @@ class RecurringFragment : Fragment(), OnImageCapturedListener {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? = inflater.inflate(R.layout.fragment_recurring, container, false)
+    ): View? = inflater.inflate(R.layout.fragment_oneshot, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -36,11 +36,10 @@ class RecurringFragment : Fragment(), OnImageCapturedListener {
             deleteRecursively()
         }
         hiddenCam = HiddenCam(mainActivity, baseStorageFolder, this)
-        startCaptureButton.setOnClickListener {
-            hiddenCam.start()
-        }
-        stopCaptureButton.setOnClickListener {
-            hiddenCam.stop()
+        hiddenCam.start()
+
+        captureButton.setOnClickListener {
+            hiddenCam.captureImage()
         }
     }
 
@@ -67,12 +66,17 @@ class RecurringFragment : Fragment(), OnImageCapturedListener {
         Log.d(TAG, message)
     }
 
+    override fun onStop() {
+        super.onStop()
+        hiddenCam.stop()
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
         hiddenCam.destroy()
     }
 
     companion object {
-        const val TAG = "RecurringFragment"
+        const val TAG = "OneShotFragment"
     }
 }

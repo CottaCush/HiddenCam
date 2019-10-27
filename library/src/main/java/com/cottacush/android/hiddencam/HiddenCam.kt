@@ -13,7 +13,7 @@ import java.io.File
 class HiddenCam(
     private val context: Context, private val baseFileDirectory: File,
     private val imageCapturedListener: OnImageCapturedListener,
-    private val captureInterval: CaptureTimeFrequency = OneShot,
+    private val captureFrequency: CaptureTimeFrequency = OneShot,
     private val aspectRatio: Rational = getDefaultAspectRatio(context),
     private val cameraResolution: Size = getDefaultScreenResolution(context),
     private val cameraFacingDirection: CameraX.LensFacing = CameraX.LensFacing.FRONT
@@ -33,7 +33,7 @@ class HiddenCam(
         if (context.hasPermissions()) {
             imageCapture = ImageCapture(imageCaptureConfig)
             CameraX.bindToLifecycle(lifeCycleOwner, imageCapture)
-            when (val interval = captureInterval) {
+            when (val interval = captureFrequency) {
                 OneShot -> {
                     //Nothing for now, we don't need to schedule anything
                 }
@@ -54,19 +54,19 @@ class HiddenCam(
     //Start: -- Cam Engine life cycle
     fun start() {
         lifeCycleOwner.start()
-        if (captureInterval is Recurring)
+        if (captureFrequency is Recurring)
             captureTimer.startUpdates()
     }
 
     fun stop() {
         lifeCycleOwner.stop()
-        if (captureInterval is Recurring)
+        if (captureFrequency is Recurring)
             captureTimer.stopUpdates()
     }
 
     fun destroy() {
         lifeCycleOwner.tearDown()
-        if (captureInterval is Recurring)
+        if (captureFrequency is Recurring)
             captureTimer.stopUpdates()
     }
 
@@ -88,6 +88,11 @@ class HiddenCam(
                     imageCapturedListener.onImageCaptured(file)
                 }
             })
+    }
+
+    public fun captureImage() {
+        if (captureFrequency is OneShot)
+            capture()
     }
 
     companion object {
