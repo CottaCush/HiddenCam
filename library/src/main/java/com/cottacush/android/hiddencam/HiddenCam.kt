@@ -54,20 +54,17 @@ class HiddenCam(
     //Start: -- Cam Engine life cycle
     fun start() {
         lifeCycleOwner.start()
-        if (captureFrequency is Recurring)
-            captureTimer.startUpdates()
+        if (captureFrequency is Recurring) captureTimer.startUpdates()
     }
 
     fun stop() {
         lifeCycleOwner.stop()
-        if (captureFrequency is Recurring)
-            captureTimer.stopUpdates()
+        if (captureFrequency is Recurring) captureTimer.stopUpdates()
     }
 
     fun destroy() {
         lifeCycleOwner.tearDown()
-        if (captureFrequency is Recurring)
-            captureTimer.stopUpdates()
+        if (captureFrequency is Recurring) captureTimer.stopUpdates()
     }
 
     //End: -- Cam Engine life cycle
@@ -90,7 +87,7 @@ class HiddenCam(
             })
     }
 
-    public fun captureImage() {
+    fun captureImage() {
         if (captureFrequency is OneShot)
             capture()
     }
@@ -99,4 +96,3 @@ class HiddenCam(
         private const val TAG = "HIDDEN_CAM"
     }
 }
-

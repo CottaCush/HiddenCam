@@ -5,6 +5,7 @@
         android:layout_height="match_parent">
 
     <com.google.android.material.button.MaterialButton
+            android:enabled="false"
             android:id="@+id/oneShotButton"
             style="@style/Widget.MaterialComponents.Button.Icon"
             android:layout_width="0dp"
@@ -24,6 +25,7 @@
             app:layout_constraintVertical_chainStyle="packed" />
 
     <com.google.android.material.button.MaterialButton
+            android:enabled="false"
             android:id="@+id/recurringButton"
             style="@style/Widget.MaterialComponents.Button.Icon"
             android:layout_width="0dp"

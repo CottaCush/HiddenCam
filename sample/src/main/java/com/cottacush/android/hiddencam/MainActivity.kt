@@ -33,10 +33,4 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         setUpNavigation()
     }
-
-
-    companion object {
-        private const val TAG = "MainActivity"
-        const val CAMERA_AND_STORAGE_PERMISSION_REQUEST_CODE = 100
-    }
 }

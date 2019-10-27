@@ -31,16 +31,24 @@ class OneShotFragment : Fragment(), OnImageCapturedListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        mainActivity.setUpToolBar("OneShot")
+
         baseStorageFolder = File(mainActivity.getExternalFilesDir(null), "HiddenCam").apply {
             //Clean up first.
-            deleteRecursively()
+            if (exists()){
+                deleteRecursively()
+            }
+            mkdir()
         }
         hiddenCam = HiddenCam(mainActivity, baseStorageFolder, this)
-        hiddenCam.start()
-
         captureButton.setOnClickListener {
             hiddenCam.captureImage()
         }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        hiddenCam.start()
     }
 
     override fun onImageCaptured(image: File) {

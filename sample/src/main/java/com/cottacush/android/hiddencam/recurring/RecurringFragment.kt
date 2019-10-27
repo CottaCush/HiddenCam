@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import com.cottacush.android.R
+import com.cottacush.android.hiddencam.CaptureTimeFrequency
 import com.cottacush.android.hiddencam.HiddenCam
 import com.cottacush.android.hiddencam.MainActivity
 import com.cottacush.android.hiddencam.OnImageCapturedListener
@@ -31,11 +32,15 @@ class RecurringFragment : Fragment(), OnImageCapturedListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        mainActivity.setUpToolBar("Recurring")
         baseStorageFolder = File(mainActivity.getExternalFilesDir(null), "HiddenCam").apply {
-            //Clean up first.
-            deleteRecursively()
+            if (exists()){
+                deleteRecursively()
+            }
+            mkdir()
         }
-        hiddenCam = HiddenCam(mainActivity, baseStorageFolder, this)
+        hiddenCam = HiddenCam(mainActivity, baseStorageFolder, this,
+            CaptureTimeFrequency.Recurring(RECURRING_INTERVAL))
         startCaptureButton.setOnClickListener {
             hiddenCam.start()
         }
@@ -74,5 +79,6 @@ class RecurringFragment : Fragment(), OnImageCapturedListener {
 
     companion object {
         const val TAG = "RecurringFragment"
+        const val RECURRING_INTERVAL = 10 * 1000L
     }
 }
