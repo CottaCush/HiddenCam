@@ -4,7 +4,6 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LifecycleRegistry
 
-//we want to use this to control CameraX, manually...
 internal class HiddenCamLifeCycleOwner : LifecycleOwner {
 
     private val lifecycleRegistry: LifecycleRegistry = LifecycleRegistry(this)
@@ -29,12 +28,3 @@ internal class HiddenCamLifeCycleOwner : LifecycleOwner {
         return lifecycleRegistry
     }
 }
-
-/*
-Lifeccyles events to watch {
-
-   // Lifecycle.Event.ON_START
-   // Lifecycle.Event.ON_STOP
-   // Lifecycle.Event.ON_DESTROY
-
-}*/

@@ -30,7 +30,7 @@ internal fun createFile(
         .format(System.currentTimeMillis()) + DEFAULT_PHOTO_EXTENSION
 )//TODO be sure to tell the library users to cleanup the files in the directory provided
 
-internal fun getDefaultScreenResoultion(context: Context): Size {
+internal fun getDefaultScreenResolution(context: Context): Size {
     val displaySize = getDefaultDisplaySize(context)
     return Size(displaySize.x, displaySize.y)
 }
@@ -41,10 +41,7 @@ internal fun getDefaultAspectRatio(context: Context): Rational {
 }
 
 private val requiredPermissions =
-    mutableListOf(
-        Manifest.permission.CAMERA,
-        Manifest.permission.WRITE_EXTERNAL_STORAGE
-    ).toTypedArray()
+    arrayOf(Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE)
 
 internal fun Context.hasPermissions(): Boolean {
     for (permission in requiredPermissions) {

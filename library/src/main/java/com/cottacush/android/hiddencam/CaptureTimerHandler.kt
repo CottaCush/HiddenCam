@@ -5,17 +5,17 @@ import android.os.Message
 
 internal class CaptureTimerHandler(
     private val captureInterval: Long,
-    val captureTimeListener: () -> Unit
+    private val captureTimeListener: CaptureTimeListener
 ) : Handler() {
 
     companion object {
-        const val DEFAULT_CAPTURE_INTERVAL = 30 * 1000L
         private const val UPDATE_TIMER_COMMAND = 100
+        const val DEFAULT_CAPTURE_INTERVAL = 30 * 1000L
         private const val INITIAL_CAPTURE_DELAY = 5 * 1000L
     }
 
     override fun handleMessage(msg: Message) {
-        captureTimeListener()
+        captureTimeListener.onCaptureTimeTick()
         queueNextCapture(captureInterval)
     }
 
@@ -31,4 +31,8 @@ internal class CaptureTimerHandler(
     fun startUpdates() {
         queueNextCapture(INITIAL_CAPTURE_DELAY)
     }
+}
+
+internal interface CaptureTimeListener {
+    fun onCaptureTimeTick()
 }
