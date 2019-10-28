@@ -1,3 +1,18 @@
+/**
+ * Copyright (c) 2019 Cotta & Cush Limited.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.cottacush.android.hiddencam
 
 import android.content.Context
@@ -10,7 +25,8 @@ import com.cottacush.android.hiddencam.CaptureTimeFrequency.Recurring
 import java.io.File
 
 class HiddenCam(
-    context: Context, private val baseFileDirectory: File,
+    context: Context,
+    private val baseFileDirectory: File,
     private val imageCapturedListener: OnImageCapturedListener,
     private val captureFrequency: CaptureTimeFrequency = OneShot,
     private val targetAspectRatio: TargetAspectRatio? = null,
@@ -35,7 +51,7 @@ class HiddenCam(
             CameraX.bindToLifecycle(lifeCycleOwner, imageCapture)
             when (val interval = captureFrequency) {
                 OneShot -> {
-                    //Nothing for now, we don't need to schedule anything
+                    // Nothing for now, we don't need to schedule anything
                 }
                 is Recurring -> {
                     captureTimer = CaptureTimerHandler(
