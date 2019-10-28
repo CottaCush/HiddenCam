@@ -4,8 +4,6 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 
-
-
 android {
     compileSdkVersion versions.compileSdk
     buildToolsVersion versions.buildTools
@@ -31,7 +29,6 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:' + versions.androidx
     implementation 'com.android.support.constraint:constraint-layout:' + versions.constraintLayout
     implementation 'com.google.android.material:material:' + versions.androidxMaterial
-    // Navigation
     implementation 'android.arch.navigation:navigation-fragment-ktx:' + versions.navigation
     implementation 'android.arch.navigation:navigation-ui-ktx:' + versions.navigation
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'

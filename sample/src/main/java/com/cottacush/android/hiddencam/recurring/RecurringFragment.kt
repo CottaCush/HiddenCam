@@ -2,16 +2,15 @@ package com.cottacush.android.hiddencam.recurring
 
 import android.os.Bundle
 import android.util.Log
+import android.util.Rational
+import android.util.Size
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import com.cottacush.android.R
-import com.cottacush.android.hiddencam.CaptureTimeFrequency
-import com.cottacush.android.hiddencam.HiddenCam
-import com.cottacush.android.hiddencam.MainActivity
-import com.cottacush.android.hiddencam.OnImageCapturedListener
+import com.cottacush.android.hiddencam.*
 import kotlinx.android.synthetic.main.fragment_recurring.*
 import java.io.File
 
@@ -34,11 +33,12 @@ class RecurringFragment : Fragment(), OnImageCapturedListener {
         super.onViewCreated(view, savedInstanceState)
         mainActivity.setUpToolBar("Recurring")
         baseStorageFolder = File(mainActivity.getExternalFilesDir(null), "HiddenCam").apply {
-            if (exists()) deleteRecursively()
-            mkdir()
+            if (!exists()) mkdir()
         }
         hiddenCam = HiddenCam(mainActivity, baseStorageFolder, this,
-            CaptureTimeFrequency.Recurring(RECURRING_INTERVAL))
+            CaptureTimeFrequency.Recurring(RECURRING_INTERVAL),
+            targetResolution = Size(1080, 1920)
+        )
         startCaptureButton.setOnClickListener {
             hiddenCam.start()
         }

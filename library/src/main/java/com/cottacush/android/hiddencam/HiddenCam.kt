@@ -1,7 +1,6 @@
 package com.cottacush.android.hiddencam
 
 import android.content.Context
-import android.util.Rational
 import android.util.Size
 import androidx.camera.core.CameraX
 import androidx.camera.core.ImageCapture
@@ -11,23 +10,23 @@ import com.cottacush.android.hiddencam.CaptureTimeFrequency.Recurring
 import java.io.File
 
 class HiddenCam(
-    private val context: Context, private val baseFileDirectory: File,
+    context: Context, private val baseFileDirectory: File,
     private val imageCapturedListener: OnImageCapturedListener,
     private val captureFrequency: CaptureTimeFrequency = OneShot,
-    private val targetAspectRatio: Rational? = null,
+    private val targetAspectRatio: TargetAspectRatio? = null,
     private val targetResolution: Size? = null,
-    private val targetRotation: Int = context.getDefaultRotation(),
-    private val cameraFacingDirection: CameraX.LensFacing = CameraX.LensFacing.FRONT
+    private val targetRotation: Int? = null,
+    private val cameraType: CameraType = CameraType.FRONT_CAMERA
 ) {
     private lateinit var captureTimer: CaptureTimerHandler
     private val lifeCycleOwner = HiddenCamLifeCycleOwner()
     private var imageCapture: ImageCapture
     private var imageCaptureConfig: ImageCaptureConfig = ImageCaptureConfig.Builder()
         .apply {
-            setLensFacing(cameraFacingDirection)
-            setTargetRotation(targetRotation)
+            setLensFacing(cameraType.lensFacing)
+            if (targetRotation != null) setTargetRotation(targetRotation)
             if (targetResolution != null) setTargetResolution(targetResolution)
-            if (targetAspectRatio != null) setTargetAspectRatio(targetAspectRatio)
+            if (targetAspectRatio != null) setTargetAspectRatio(targetAspectRatio.aspectRatio)
         }.build()
 
     init {
@@ -72,7 +71,7 @@ class HiddenCam(
     }
 
     private fun capture() {
-        imageCapture.takePicture(createFile(baseFileDirectory),
+        imageCapture.takePicture(createFile(baseFileDirectory), MainThreadExecutor,
             object : ImageCapture.OnImageSavedListener {
                 override fun onError(
                     imageCaptureError: ImageCapture.ImageCaptureError,
