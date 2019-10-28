@@ -1,21 +1,22 @@
 package com.cottacush.android.hiddencam
 
 import android.content.Context
-import android.util.Log
 import android.util.Rational
 import android.util.Size
 import androidx.camera.core.CameraX
 import androidx.camera.core.ImageCapture
 import androidx.camera.core.ImageCaptureConfig
-import com.cottacush.android.hiddencam.CaptureTimeFrequency.*
+import com.cottacush.android.hiddencam.CaptureTimeFrequency.OneShot
+import com.cottacush.android.hiddencam.CaptureTimeFrequency.Recurring
 import java.io.File
 
 class HiddenCam(
     private val context: Context, private val baseFileDirectory: File,
     private val imageCapturedListener: OnImageCapturedListener,
     private val captureFrequency: CaptureTimeFrequency = OneShot,
-    private val aspectRatio: Rational = getDefaultAspectRatio(context),
-    private val cameraResolution: Size = getDefaultScreenResolution(context),
+    private val targetAspectRatio: Rational? = null,
+    private val targetResolution: Size? = null,
+    private val targetRotation: Int = context.getDefaultRotation(),
     private val cameraFacingDirection: CameraX.LensFacing = CameraX.LensFacing.FRONT
 ) {
     private lateinit var captureTimer: CaptureTimerHandler
@@ -24,9 +25,9 @@ class HiddenCam(
     private var imageCaptureConfig: ImageCaptureConfig = ImageCaptureConfig.Builder()
         .apply {
             setLensFacing(cameraFacingDirection)
-            //  setTargetResolution(cameraResolution)
-            setTargetAspectRatio(aspectRatio)
-            setCaptureMode(ImageCapture.CaptureMode.MIN_LATENCY)
+            setTargetRotation(targetRotation)
+            if (targetResolution != null) setTargetResolution(targetResolution)
+            if (targetAspectRatio != null) setTargetAspectRatio(targetAspectRatio)
         }.build()
 
     init {
@@ -47,11 +48,9 @@ class HiddenCam(
                         })
                 }
             }
-
         } else throw SecurityException("You need to have access to both CAMERA and WRITE_EXTERNAL_STORAGE permissions")
     }
 
-    //Start: -- Cam Engine life cycle
     fun start() {
         lifeCycleOwner.start()
         if (captureFrequency is Recurring) captureTimer.startUpdates()
@@ -67,7 +66,11 @@ class HiddenCam(
         if (captureFrequency is Recurring) captureTimer.stopUpdates()
     }
 
-    //End: -- Cam Engine life cycle
+    fun captureImage() {
+        if (captureFrequency is OneShot)
+            capture()
+    }
+
     private fun capture() {
         imageCapture.takePicture(createFile(baseFileDirectory),
             object : ImageCapture.OnImageSavedListener {
@@ -75,24 +78,9 @@ class HiddenCam(
                     imageCaptureError: ImageCapture.ImageCaptureError,
                     message: String,
                     cause: Throwable?
-                ) {
-                    Log.e(TAG, "Photo capture failed: $message")
-                    imageCapturedListener.onImageCaptureError(cause)
-                }
+                ) = imageCapturedListener.onImageCaptureError(cause)
 
-                override fun onImageSaved(file: File) {
-                    Log.d(TAG, "Photo capture succeeded: ${file.absolutePath}")
-                    imageCapturedListener.onImageCaptured(file)
-                }
+                override fun onImageSaved(file: File) = imageCapturedListener.onImageCaptured(file)
             })
-    }
-
-    fun captureImage() {
-        if (captureFrequency is OneShot)
-            capture()
-    }
-
-    companion object {
-        private const val TAG = "HIDDEN_CAM"
     }
 }

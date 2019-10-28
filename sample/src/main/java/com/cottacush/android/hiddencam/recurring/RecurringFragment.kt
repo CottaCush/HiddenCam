@@ -34,9 +34,7 @@ class RecurringFragment : Fragment(), OnImageCapturedListener {
         super.onViewCreated(view, savedInstanceState)
         mainActivity.setUpToolBar("Recurring")
         baseStorageFolder = File(mainActivity.getExternalFilesDir(null), "HiddenCam").apply {
-            if (exists()){
-                deleteRecursively()
-            }
+            if (exists()) deleteRecursively()
             mkdir()
         }
         hiddenCam = HiddenCam(mainActivity, baseStorageFolder, this,

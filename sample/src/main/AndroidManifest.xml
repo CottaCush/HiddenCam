@@ -17,7 +17,8 @@
             android:supportsRtl="true"
             android:theme="@style/AppTheme"
             tools:ignore="AllowBackup,GoogleAppIndexingWarning">
-        <activity android:name=".hiddencam.MainActivity">
+        <activity android:screenOrientation="portrait"
+                android:name=".hiddencam.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -25,5 +26,4 @@
             </intent-filter>
         </activity>
     </application>
-
 </manifest>

@@ -4,6 +4,7 @@ import android.Manifest
 import android.content.Context
 import android.content.pm.PackageManager
 import android.graphics.Point
+import android.util.Log
 import android.util.Rational
 import android.util.Size
 import android.view.WindowManager
@@ -14,13 +15,29 @@ import java.util.*
 
 private const val DEFAULT_FILENAME = "yyyy-MM-dd-HH-mm-ss-SSS"
 private const val DEFAULT_PHOTO_EXTENSION = ".jpg"
+private val requiredPermissions =
+    arrayOf(Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE)
 
-internal fun getDefaultDisplaySize(context: Context): Point {
-    val display =
-        (context.getSystemService(Context.WINDOW_SERVICE) as WindowManager).defaultDisplay
+class HiddenCamUtils {
+    companion object {
+        fun getAspectRatioWithScreenDimension(context: Context): Rational =
+            context.getDefaultAspectRatio()
+    }
+}
+
+internal fun Context.getDefaultDisplaySize(): Point {
+    val display = getTypedSystemService<WindowManager>(Context.WINDOW_SERVICE).defaultDisplay
     val size = Point()
     display.getSize(size)
     return size
+}
+
+internal fun Context.getDefaultRotation(): Int =
+    getTypedSystemService<WindowManager>(Context.WINDOW_SERVICE).defaultDisplay.rotation
+
+
+inline fun <reified T> Context.getTypedSystemService(name: String): T {
+    return getSystemService(name) as T
 }
 
 internal fun createFile(
@@ -28,20 +45,13 @@ internal fun createFile(
 ): File = File(
     baseDirectory, SimpleDateFormat(DEFAULT_FILENAME, Locale.US)
         .format(System.currentTimeMillis()) + DEFAULT_PHOTO_EXTENSION
-)//TODO be sure to tell the library users to cleanup the files in the directory provided
 
-internal fun getDefaultScreenResolution(context: Context): Size {
-    val displaySize = getDefaultDisplaySize(context)
-    return Size(displaySize.x, displaySize.y)
-}
+)
 
-internal fun getDefaultAspectRatio(context: Context): Rational {
-    val displaySize = getDefaultDisplaySize(context)
+internal fun Context.getDefaultAspectRatio(): Rational {
+    val displaySize = getDefaultDisplaySize()
     return Rational(displaySize.x, displaySize.y)
 }
-
-private val requiredPermissions =
-    arrayOf(Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE)
 
 internal fun Context.hasPermissions(): Boolean {
     for (permission in requiredPermissions) {

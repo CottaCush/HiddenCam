@@ -12,19 +12,11 @@ internal class HiddenCamLifeCycleOwner : LifecycleOwner {
         lifecycleRegistry.markState(Lifecycle.State.CREATED)
     }
 
-    fun start() {
-        lifecycleRegistry.markState(Lifecycle.State.STARTED)
-    }
+    fun start() = lifecycleRegistry.markState(Lifecycle.State.STARTED)
 
-    fun stop() {
-        lifecycleRegistry.markState(Lifecycle.State.CREATED)
-    }
+    fun stop() = lifecycleRegistry.markState(Lifecycle.State.CREATED)
 
-    fun tearDown() {
-        lifecycleRegistry.markState(Lifecycle.State.DESTROYED)
-    }
+    fun tearDown() = lifecycleRegistry.markState(Lifecycle.State.DESTROYED)
 
-    override fun getLifecycle(): Lifecycle {
-        return lifecycleRegistry
-    }
+    override fun getLifecycle(): Lifecycle = lifecycleRegistry
 }
