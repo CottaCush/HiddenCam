@@ -13,7 +13,7 @@
             android:layout_marginEnd="50dp"
             android:layout_marginBottom="20dp"
             android:padding="16dp"
-            android:text="Capture"
+            android:text="@string/capture"
             app:cornerRadius="24dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

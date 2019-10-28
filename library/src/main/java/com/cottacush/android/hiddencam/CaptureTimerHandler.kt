@@ -10,7 +10,6 @@ internal class CaptureTimerHandler(
 
     companion object {
         private const val UPDATE_TIMER_COMMAND = 100
-        const val DEFAULT_CAPTURE_INTERVAL = 30 * 1000L
         private const val INITIAL_CAPTURE_DELAY = 5 * 1000L
     }
 

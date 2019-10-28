@@ -32,7 +32,7 @@ class OneShotFragment : Fragment(), OnImageCapturedListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        mainActivity.setUpToolBar("OneShot")
+        mainActivity.setUpToolBar(getString(R.string.one_shot))
         baseStorageFolder = File(mainActivity.getExternalFilesDir(null), "HiddenCam").apply {
             if (!exists()) mkdir()
         }
