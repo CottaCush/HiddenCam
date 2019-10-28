@@ -51,6 +51,6 @@ internal fun Context.hasPermissions(): Boolean {
 internal object MainThreadExecutor : Executor {
     private val handler: Handler = Handler(Looper.getMainLooper())
     override fun execute(r: Runnable?) {
-        handler.post(r)
+        r?.let { handler.post(it) }
     }
 }
