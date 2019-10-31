@@ -1,110 +1,101 @@
+/**
+ * Copyright (c) 2019 Cotta & Cush Limited.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.cottacush.android.hiddencam
 
 import android.content.Context
-import android.os.CountDownTimer
-import android.util.Log
-import android.util.Rational
 import android.util.Size
 import androidx.camera.core.CameraX
 import androidx.camera.core.ImageCapture
 import androidx.camera.core.ImageCaptureConfig
+import com.cottacush.android.hiddencam.CaptureTimeFrequency.OneShot
+import com.cottacush.android.hiddencam.CaptureTimeFrequency.Recurring
 import java.io.File
 
-//TODO remove all Logs once we are done?.
-
-//TODO Idea: Timer can be set to default values zero and zero for single images capture
-
 class HiddenCam(
-    private val context: Context, private val baseFileDirectory: File,
-    private val aspectRatio: Rational = getDefaultAspectRatio(context),
-    private val cameraResolution: Size = getDefaultScreenResoultion(context),
-    private val cameraFacingDirection: CameraX.LensFacing = CameraX.LensFacing.FRONT
-    // TODO add more configurable inputs here. Provide default values if needed
-
+    context: Context,
+    private val baseFileDirectory: File,
+    private val imageCapturedListener: OnImageCapturedListener,
+    private val captureFrequency: CaptureTimeFrequency = OneShot,
+    private val targetAspectRatio: TargetAspectRatio? = null,
+    private val targetResolution: Size? = null,
+    private val targetRotation: Int? = null,
+    private val cameraType: CameraType = CameraType.FRONT_CAMERA
 ) {
-
-    private lateinit var timer: CountDownTimer
+    private lateinit var captureTimer: CaptureTimerHandler
     private val lifeCycleOwner = HiddenCamLifeCycleOwner()
     private var imageCapture: ImageCapture
     private var imageCaptureConfig: ImageCaptureConfig = ImageCaptureConfig.Builder()
         .apply {
-            setLensFacing(cameraFacingDirection)
-            setTargetResolution(cameraResolution)
-            setTargetAspectRatio(aspectRatio) // TODO make this configurable?
-            setCaptureMode(ImageCapture.CaptureMode.MIN_LATENCY)// TODO experiment with all possible capture modes to see which one gives clear picture
-
-
-            //TODO make other necessary configurations, to get best picture
-
-
+            setLensFacing(cameraType.lensFacing)
+            if (targetRotation != null) setTargetRotation(targetRotation)
+            if (targetResolution != null) setTargetResolution(targetResolution)
+            if (targetAspectRatio != null) setTargetAspectRatio(targetAspectRatio.aspectRatio)
         }.build()
 
     init {
-        imageCapture = ImageCapture(imageCaptureConfig)
-        CameraX.bindToLifecycle(lifeCycleOwner, imageCapture)
-    }
-
-    fun startCameraSession(interval: Long, totalTime: Long) {
-        timer = object : CountDownTimer(totalTime * ONE_SECOND, interval * ONE_SECOND) {
-            override fun onFinish() {
-                //TODO We are done with the interval. Should we tear the camera down?
+        if (context.hasPermissions()) {
+            imageCapture = ImageCapture(imageCaptureConfig)
+            CameraX.bindToLifecycle(lifeCycleOwner, imageCapture)
+            when (val interval = captureFrequency) {
+                OneShot -> {
+                    // Nothing for now, we don't need to schedule anything
+                }
+                is Recurring -> {
+                    captureTimer = CaptureTimerHandler(
+                        interval.captureIntervalMillis,
+                        object : CaptureTimeListener {
+                            override fun onCaptureTimeTick() {
+                                capture()
+                            }
+                        })
+                }
             }
-
-            override fun onTick(p0: Long) {
-                capture()
-            }
-
-        }
-        timer.start()
+        } else throw SecurityException("You need to have access to both CAMERA and WRITE_EXTERNAL_STORAGE permissions")
     }
 
-    fun stopCameraSession() {
-        timer.cancel()
-    }
-
-    //Start: -- Cam Engine life cycle
     fun start() {
         lifeCycleOwner.start()
+        if (captureFrequency is Recurring) captureTimer.startUpdates()
     }
 
     fun stop() {
         lifeCycleOwner.stop()
+        if (captureFrequency is Recurring) captureTimer.stopUpdates()
     }
 
-    fun tearDown() {
+    fun destroy() {
         lifeCycleOwner.tearDown()
+        if (captureFrequency is Recurring) captureTimer.stopUpdates()
     }
 
-    //End: -- Cam Engine life cycle
+    fun captureImage() {
+        if (captureFrequency is OneShot)
+            capture()
+    }
 
-    fun capture() {
-        imageCapture.takePicture(
-            createFile(baseFileDirectory),
+    private fun capture() {
+        imageCapture.takePicture(createFile(baseFileDirectory), MainThreadExecutor,
             object : ImageCapture.OnImageSavedListener {
                 override fun onError(
                     imageCaptureError: ImageCapture.ImageCaptureError,
                     message: String,
                     cause: Throwable?
-                ) {
-                    //TODO report back to the listener
-                    Log.e(TAG, "Photo capture failed: $message")
-                    cause?.printStackTrace()
-                }
+                ) = imageCapturedListener.onImageCaptureError(cause)
 
-                override fun onImageSaved(file: File) {
-                    val msg = "Photo capture succeeded: ${file.absolutePath}"
-                    //TODO report back to the listener
-                    //TODO should we stop capturing after one error? ... or we should keep trying based on the schedule timer?
-                    Log.d(TAG, msg)
-                }
+                override fun onImageSaved(file: File) = imageCapturedListener.onImageCaptured(file)
             })
     }
-
-    companion object {
-        private const val TAG = "HiddenCam"
-        // Number of milliseconds in a second
-        const val ONE_SECOND = 1000L
-    }
-
 }
-

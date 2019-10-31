@@ -15,9 +15,16 @@
  */
 package com.cottacush.android.hiddencam
 
-import java.io.File
+import android.content.Context
+import android.content.pm.PackageManager
+import androidx.core.content.ContextCompat
 
-interface OnImageCapturedListener {
-    fun onImageCaptured(image: File)
-    fun onImageCaptureError(e: Throwable?)
+fun Context.hasPermissions(permissionList: Array<String>): Boolean {
+    for (permission in permissionList) {
+        if (!hasPermission(permission)) return false
+    }
+    return true
 }
+
+fun Context.hasPermission(permission: String): Boolean =
+    ContextCompat.checkSelfPermission(this, permission) == PackageManager.PERMISSION_GRANTED

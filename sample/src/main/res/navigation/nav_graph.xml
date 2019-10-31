@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/nav_graph"
+        app:startDestination="@id/landingPageFragment">
+
+    <fragment
+            tools:layout="@layout/fragment_landing_page"
+            android:id="@+id/landingPageFragment"
+            android:name="com.cottacush.android.hiddencam.LandingPageFragment"
+            android:label="LandingPageFragment" >
+        <action
+                android:id="@+id/action_landingPageFragment_to_oneShotFragment"
+                app:destination="@id/oneShotFragment" />
+        <action
+                android:id="@+id/action_landingPageFragment_to_recurringFragment"
+                app:destination="@id/recurringFragment" />
+    </fragment>
+    <fragment
+            tools:layout="@layout/fragment_oneshot"
+            android:id="@+id/oneShotFragment"
+            android:name="com.cottacush.android.hiddencam.oneshot.OneShotFragment"
+            android:label="OneShotFragment" />
+    <fragment
+            tools:layout="@layout/fragment_recurring"
+            android:id="@+id/recurringFragment"
+            android:name="com.cottacush.android.hiddencam.recurring.RecurringFragment"
+            android:label="RecurringFragment" />
+</navigation>

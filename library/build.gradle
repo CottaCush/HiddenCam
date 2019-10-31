@@ -39,6 +39,7 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:' + versions.androidx
     implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk8:' + versions.kotlin
     implementation 'androidx.camera:camera-core:' + versions.cameraX
+    implementation 'androidx.camera:camera-camera2:' + versions.cameraX
 }
 
 apply from: '../spotless.gradle'

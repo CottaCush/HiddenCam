@@ -4,31 +4,34 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 
-
 android {
-  compileSdkVersion versions.compileSdk
-  buildToolsVersion versions.buildTools
+    compileSdkVersion versions.compileSdk
+    buildToolsVersion versions.buildTools
 
-  compileOptions {
-    sourceCompatibility 1.8
-    targetCompatibility 1.8
-  }
+    compileOptions {
+        sourceCompatibility 1.8
+        targetCompatibility 1.8
+    }
 
-  defaultConfig {
-    applicationId "com.cottacush.android.hiddencamera"
-    minSdkVersion versions.minSdk
-    targetSdkVersion versions.compileSdk
-    versionCode versions.publishVersionCode
-    versionName versions.publishVersion
-  }
+    defaultConfig {
+        applicationId "com.cottacush.android.hiddencamera"
+        minSdkVersion versions.minSdk
+        targetSdkVersion versions.compileSdk
+        versionCode versions.publishVersionCode
+        versionName versions.publishVersion
+    }
 }
 
 dependencies {
-  implementation project(':library')
-  implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk8:' + versions.kotlin
-  implementation 'androidx.core:core-ktx:' + versions.ktx
-  implementation 'androidx.appcompat:appcompat:' + versions.androidx
-  implementation 'com.android.support.constraint:constraint-layout:' + versions.constraintLayout
+    implementation project(':library')
+    implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk8:' + versions.kotlin
+    implementation 'androidx.core:core-ktx:' + versions.ktx
+    implementation 'androidx.appcompat:appcompat:' + versions.androidx
+    implementation 'com.android.support.constraint:constraint-layout:' + versions.constraintLayout
+    implementation 'com.google.android.material:material:' + versions.androidxMaterial
+    implementation 'android.arch.navigation:navigation-fragment-ktx:' + versions.navigation
+    implementation 'android.arch.navigation:navigation-ui-ktx:' + versions.navigation
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
 }
 
 apply from: '../spotless.gradle'
