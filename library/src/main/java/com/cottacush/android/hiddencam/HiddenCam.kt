@@ -59,10 +59,8 @@ class HiddenCam(
     init {
         if (context.hasPermissions()) {
             imageCapture = ImageCapture(imageCaptureConfig)
-
             preview = Preview(previewConfig)
             preview.setOnPreviewOutputUpdateListener { }
-
             CameraX.bindToLifecycle(lifeCycleOwner, preview, imageCapture)
             when (val interval = captureFrequency) {
                 OneShot -> {
