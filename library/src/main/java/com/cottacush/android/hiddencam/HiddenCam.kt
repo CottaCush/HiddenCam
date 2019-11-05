@@ -16,9 +16,7 @@
 package com.cottacush.android.hiddencam
 
 import android.content.Context
-import android.graphics.SurfaceTexture
 import android.util.Size
-import android.view.Surface
 import androidx.camera.core.*
 import com.cottacush.android.hiddencam.CaptureTimeFrequency.OneShot
 import com.cottacush.android.hiddencam.CaptureTimeFrequency.Recurring
