@@ -16,10 +16,10 @@
 package com.cottacush.android.hiddencam
 
 import android.content.Context
+import android.graphics.SurfaceTexture
 import android.util.Size
-import androidx.camera.core.CameraX
-import androidx.camera.core.ImageCapture
-import androidx.camera.core.ImageCaptureConfig
+import android.view.Surface
+import androidx.camera.core.*
 import com.cottacush.android.hiddencam.CaptureTimeFrequency.OneShot
 import com.cottacush.android.hiddencam.CaptureTimeFrequency.Recurring
 import java.io.File
@@ -36,6 +36,17 @@ class HiddenCam(
 ) {
     private lateinit var captureTimer: CaptureTimerHandler
     private val lifeCycleOwner = HiddenCamLifeCycleOwner()
+
+    //Preview UseCase
+    private var preview: Preview
+    private var previewConfig = PreviewConfig.Builder().apply {
+        setLensFacing(cameraType.lensFacing)
+        if (targetRotation != null) setTargetRotation(targetRotation)
+        if (targetAspectRatio != null) setTargetAspectRatio(targetAspectRatio.aspectRatio)
+        if (targetResolution != null) setTargetResolution(targetResolution)
+    }.build()
+
+    //Image Capture Usecase
     private var imageCapture: ImageCapture
     private var imageCaptureConfig: ImageCaptureConfig = ImageCaptureConfig.Builder()
         .apply {
@@ -48,7 +59,11 @@ class HiddenCam(
     init {
         if (context.hasPermissions()) {
             imageCapture = ImageCapture(imageCaptureConfig)
-            CameraX.bindToLifecycle(lifeCycleOwner, imageCapture)
+
+            preview = Preview(previewConfig)
+            preview.setOnPreviewOutputUpdateListener { }
+
+            CameraX.bindToLifecycle(lifeCycleOwner, preview, imageCapture)
             when (val interval = captureFrequency) {
                 OneShot -> {
                     // Nothing for now, we don't need to schedule anything
@@ -82,8 +97,9 @@ class HiddenCam(
     }
 
     fun captureImage() {
-        if (captureFrequency is OneShot)
+        if (captureFrequency is OneShot) {
             capture()
+        }
     }
 
     private fun capture() {
