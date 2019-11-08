@@ -15,7 +15,20 @@
  */
 package com.cottacush.android.hiddencam
 
+/**
+ * A CaptureTimeFrequency allows you to specify if you want to activate continuous captures at a
+ * regular interval, or manually triggered captures. see also, [OneShot] and [Recurring]
+ */
 sealed class CaptureTimeFrequency {
+
+    /**
+     * A [CaptureTimeFrequency] option that specifies manually triggered captures.
+     */
     object OneShot : CaptureTimeFrequency()
+
+    /**
+     * A [CaptureTimeFrequency] option that specifies continuous captures.
+     * @param captureIntervalMillis the interval in milliseconds at with the captures will be performed
+     */
     class Recurring(val captureIntervalMillis: Long) : CaptureTimeFrequency()
 }
