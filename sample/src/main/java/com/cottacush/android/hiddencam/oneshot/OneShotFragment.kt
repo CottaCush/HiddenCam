@@ -48,16 +48,12 @@ class OneShotFragment : Fragment(), OnImageCapturedListener {
         super.onViewCreated(view, savedInstanceState)
         mainActivity.setUpToolBar(getString(R.string.one_shot))
         baseStorageFolder = File(mainActivity.getExternalFilesDir(null), "HiddenCam").apply {
-            if (!exists()) mkdir()
+            if (exists()) deleteRecursively()
+            mkdir()
         }
         hiddenCam = HiddenCam(
             mainActivity, baseStorageFolder, this,
-            targetAspectRatio = TargetAspectRatio.RATIO_16_9
-        )
-
-        hiddenCam = HiddenCam(
-            mainActivity, baseStorageFolder, this,
-            captureFrequency = CaptureTimeFrequency.Recurring(captureIntervalMillis = 15 * 1000)
+            targetResolution = Size(1920, 1080)
         )
 
         captureButton.setOnClickListener {

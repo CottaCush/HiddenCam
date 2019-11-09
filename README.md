@@ -14,8 +14,7 @@ implementation 'com.cottacush:HiddenCamera:0.0.1'
 ```
 
 ## Usage
-
-It is very easy to get started with Hidden cam. 
+`HiddenCam` uses `CameraX` under the hood. It is very easy to get started with Hidden cam. 
 First, initialize the camera engine with a `Context`, A `File` that 
 represents the base storage folder where the captured images will be saved to, 
 and an `OnImageCapturedListener` to get capture results:
@@ -83,6 +82,37 @@ To override the phone's default Aspect ratio, you can pass a `TargetAspectRatio`
 val hiddenCam = HiddenCam(context, baseStorageFolder, captureListener, targetAspectRatio = TargetAspectRatio.RATIO_16_9)
 ```
 
+### Rotation
+By default, the camera [rotation](https://developer.android.com/training/camerax/configuration#rotation) is set to match the default display's rotation during the creation of the `HiddenCam` object.
+This should work for most cases. If you need something more specific, you can set the rotation:
+```kotlin
+val rotation: Int = {...}
+val hiddenCam = HiddenCam(context, baseStorageFolder, captureListener, targetRotation = rotation)
+```
+
+### Camera Type
+You can use use the `CameraType` enum to specify weather you want to use a front camera, or a back camera. The default settings is  `FRONT_CAMERA`.
+For example, to use a back camera, you can do:
+```kotlin
+val hiddenCam = HiddenCam(context, baseStorageFolder, captureListener, cameraType = CameraType.BACK_CAMERA)
+```
+
+### Full Configuration
+Eventually, a fully customised `HiddenCam` instance would look like this: 
+
+```kotlin
+hiddenCam = HiddenCam(
+            context = context,
+            baseFileDirectory = baseStorageFolder,
+            imageCapturedListener = captureListener,
+            targetAspectRatio = TargetAspectRatio.RATIO_16_9,
+            targetResolution = Size(1920, 1080),
+            targetRotation = windowManager.defaultDisplay.rotation,
+            cameraType = CameraType.FRONT_CAMERA,
+            captureFrequency = Recurring(captureIntervalMillis = 15 * 1000)
+        )
+```
+ 
 ##  License
 
     Copyright (c) 2019 Cotta & Cush Limited.
