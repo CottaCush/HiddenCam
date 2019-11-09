@@ -1,4 +1,7 @@
 # HiddenCamera
+
+##  \[ 🚧 Work in progress 🛠 👷🔧👷‍♀️️🔧️ 🚧 \]
+
 A library that allows you to take picture secretly, in the background without alerting users.
 [![Build Status](https://travis-ci.org/CottaCush/HiddenCam.svg?branch=master)](https://travis-ci.org/CottaCush/HiddenCam)
 
