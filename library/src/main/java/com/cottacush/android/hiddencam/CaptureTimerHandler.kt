@@ -25,7 +25,7 @@ internal class CaptureTimerHandler(
 
     companion object {
         private const val UPDATE_TIMER_COMMAND = 100
-        private const val INITIAL_CAPTURE_DELAY = 5 * 1000L
+        private const val INITIAL_CAPTURE_DELAY = 2 * 1000L
     }
 
     override fun handleMessage(msg: Message) {

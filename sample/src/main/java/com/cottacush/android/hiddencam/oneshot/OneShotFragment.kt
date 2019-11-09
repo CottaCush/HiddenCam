@@ -24,9 +24,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.cottacush.android.R
-import com.cottacush.android.hiddencam.HiddenCam
-import com.cottacush.android.hiddencam.MainActivity
-import com.cottacush.android.hiddencam.OnImageCapturedListener
+import com.cottacush.android.hiddencam.*
 import kotlinx.android.synthetic.main.fragment_oneshot.*
 import java.io.File
 
@@ -54,8 +52,14 @@ class OneShotFragment : Fragment(), OnImageCapturedListener {
         }
         hiddenCam = HiddenCam(
             mainActivity, baseStorageFolder, this,
-            targetResolution = Size(1080, 1920)
+            targetAspectRatio = TargetAspectRatio.RATIO_16_9
         )
+
+        hiddenCam = HiddenCam(
+            mainActivity, baseStorageFolder, this,
+            captureFrequency = CaptureTimeFrequency.Recurring(captureIntervalMillis = 15 * 1000)
+        )
+
         captureButton.setOnClickListener {
             hiddenCam.captureImage()
         }

@@ -42,8 +42,43 @@ hiddenCam.destroy()
 
 That's all for basic setup. The captured images should be save at the storage folder provided.
 
+## Customisation
+`HiddenCam` attempts to use some default values to improve ease of use.
+ Customization can be done by supplying additional arguments to the `HiddenCam()` constructor. 
 
+### Capture Mode (Reccuring or one shot)
+The capture mode is specified by the `CaptureTimeFrequency` class. 
 
+#### OneShot
+This capture mode should be used when you want to capture images manually with the `capture()` function. 
+It is the default setting for the `CaptureTimeFrequency` parameter
+
+```kotlin
+val hiddenCam = HiddenCam(context, baseStorageFolder, captureListener, captureFrequency = OneShot)
+```
+#### Recurring
+This capture mode should be used when you want to activate continuous captures at a specified interval. The captures will start as 
+soon as you call the the `start()` function on your `HiddenCam` instance. Manual calls to the `capture()` function will be ignored.
+
+```kotlin
+val hiddenCam = HiddenCam(context, baseStorageFolder, captureListener, captureFrequency = Recurring(captureIntervalMillis))
+```
+where captureIntervalMillis is the interval.
+
+### Resolution and Aspect Ratio
+You can either set `Resolution` or `AspectRatio`, not both.
+If `Resolution` is not set, `HiddenCam` will try to use the best resolution based on the 
+selected (or default) `AspectRatio` and phone's camera hardware capability. Resolution can manually be specified by passing a `Size` object to `HiddenCam` constructor. 
+For example, a resolution of 1080 X 1920 can be applied as follows:
+
+```kotlin
+val hiddenCam = HiddenCam(context, baseStorageFolder, captureListener, targetResolution = Size(1080, 1920))
+```
+To override the phone's default Aspect ratio, you can pass a `TargetAspectRatio` enum to the camera instance. For example, an aspect ratio 16:9 can be applied as follows:
+ 
+```kotlin
+val hiddenCam = HiddenCam(context, baseStorageFolder, captureListener, targetAspectRatio = TargetAspectRatio.RATIO_16_9)
+```
 
 ##  License
 
