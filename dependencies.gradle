@@ -13,7 +13,7 @@ ext.versions = [
         kotlin            : '1.3.60-eap-25',
         ktx               : '1.0.2',
         androidx          : '1.0.2',
-        navigation          : '1.0.0',
+        navigation        : '1.0.0',
 
         cameraX           : '1.0.0-alpha06',
         androidxMaterial  : '1.0.0'

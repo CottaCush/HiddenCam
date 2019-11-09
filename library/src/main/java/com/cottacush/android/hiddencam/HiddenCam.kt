@@ -35,7 +35,7 @@ class HiddenCam(
     private lateinit var captureTimer: CaptureTimerHandler
     private val lifeCycleOwner = HiddenCamLifeCycleOwner()
 
-    //Preview UseCase
+    // Preview UseCase
     private var preview: Preview
     private var previewConfig = PreviewConfig.Builder().apply {
         setLensFacing(cameraType.lensFacing)
@@ -44,7 +44,7 @@ class HiddenCam(
         if (targetResolution != null) setTargetResolution(targetResolution)
     }.build()
 
-    //Image Capture Usecase
+    // Image Capture Usecase
     private var imageCapture: ImageCapture
     private var imageCaptureConfig: ImageCaptureConfig = ImageCaptureConfig.Builder()
         .apply {
