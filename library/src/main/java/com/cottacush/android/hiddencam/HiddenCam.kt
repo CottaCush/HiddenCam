@@ -37,7 +37,7 @@ class HiddenCam(
 
     /**
      * For some devices, if the camera doesn't have time to preview before the actual capture, it
-     * would result into an underexposed or overexposed photo. Hence, A [Preview] use case is set up
+     * would result into an underexposed or overexposed image. Hence, A [Preview] use case is set up
      * which renders to a dummy surface.
      */
     private var preview: Preview
@@ -51,13 +51,12 @@ class HiddenCam(
     }.build()
 
     /**
-     * An [ImageCapture] use case to capture photos.
+     * An [ImageCapture] use case to capture images.
      */
     private var imageCapture: ImageCapture
 
     /**
-     * Configures the camera for Image Capture. Basically, [preview] and [imageCapture] have the
-     * same configuration settings
+     * Configures the camera for Image Capture.
      */
     private var imageCaptureConfig: ImageCaptureConfig = ImageCaptureConfig.Builder()
         .apply {
@@ -67,15 +66,9 @@ class HiddenCam(
             if (targetAspectRatio != null) setTargetAspectRatio(targetAspectRatio.aspectRatio)
         }.build()
 
-
-    //TODO @rasheed, please check this. The links are not linking for this paticular doc
     /**
-     * Checks if required permissions are available.
-     *
-     * @throws SecurityException if permissions aren't available.
-     *
-     * If permissions are available, new [Preview] and [ImageCapture] use cases are created from the
-     * given configuration. [CaptureTimeFrequency] is setup too.
+     * Provides basic setup for the camera engine.
+     * throws SecurityException if the required permissions aren't available.
      */
     init {
         if (context.hasPermissions()) {
@@ -101,8 +94,8 @@ class HiddenCam(
     }
 
     /**
-     * Mark [HiddenCam]'s lifecycle as started. If the kind [CaptureTimeFrequency] supplied is
-     * [Recurring], Automatic photo captures are triggered.
+     * Mark [HiddenCam]'s lifecycle as started. If the [CaptureTimeFrequency] supplied is
+     * [Recurring], automatic image captures are triggered.
      */
     fun start() {
         lifeCycleOwner.start()
@@ -110,8 +103,8 @@ class HiddenCam(
     }
 
     /**
-     * Mark [HiddenCam]'s lifecycle as stopped. If the kind of [CaptureTimeFrequency] supplied is
-     * [Recurring], Automatic photo captures are stopped.
+     * Mark [HiddenCam]'s lifecycle as stopped. If the [CaptureTimeFrequency] supplied is
+     * [Recurring], automatic image captures are stopped.
      */
     fun stop() {
         lifeCycleOwner.stop()
@@ -120,7 +113,7 @@ class HiddenCam(
 
     /**
      * Mark [HiddenCam]'s lifecycle as destroyed. If the kind of [CaptureTimeFrequency] supplied is
-     * [Recurring], Automatic photo captures are stopped.
+     * [Recurring], Automatic image captures are stopped.
      */
     fun destroy() {
         lifeCycleOwner.tearDown()
@@ -128,7 +121,7 @@ class HiddenCam(
     }
 
     /**
-     * Method to manually trigger a photo capture.
+     * Method to manually trigger an image capture.
      * @see capture
      */
     fun captureImage() {
@@ -138,9 +131,8 @@ class HiddenCam(
     }
 
     /**
-     * Capture photo and save in [baseFileDirectory].
-     *
-     * @see OnImageCapturedListener
+     * Capture image and save in the container directory supplied.
+     * The results are delivered with the supplied [OnImageCapturedListener]
      */
     private fun capture() {
         imageCapture.takePicture(createFile(baseFileDirectory), MainThreadExecutor,
