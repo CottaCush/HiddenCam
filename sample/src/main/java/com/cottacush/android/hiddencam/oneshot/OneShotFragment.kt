@@ -24,9 +24,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.cottacush.android.R
-import com.cottacush.android.hiddencam.HiddenCam
-import com.cottacush.android.hiddencam.MainActivity
-import com.cottacush.android.hiddencam.OnImageCapturedListener
+import com.cottacush.android.hiddencam.*
 import kotlinx.android.synthetic.main.fragment_oneshot.*
 import java.io.File
 
@@ -50,12 +48,14 @@ class OneShotFragment : Fragment(), OnImageCapturedListener {
         super.onViewCreated(view, savedInstanceState)
         mainActivity.setUpToolBar(getString(R.string.one_shot))
         baseStorageFolder = File(mainActivity.getExternalFilesDir(null), "HiddenCam").apply {
-            if (!exists()) mkdir()
+            if (exists()) deleteRecursively()
+            mkdir()
         }
         hiddenCam = HiddenCam(
             mainActivity, baseStorageFolder, this,
-            targetResolution = Size(1080, 1920)
+            targetResolution = Size(1920, 1080)
         )
+
         captureButton.setOnClickListener {
             hiddenCam.captureImage()
         }
