@@ -31,7 +31,7 @@ internal class CaptureTimerHandler(
     companion object {
         /** Message code for Capture to uniquely identify our message */
         private const val UPDATE_TIMER_COMMAND = 100
-        /** Five Second initial Delay for Automatic Captures */
+        /** Two Second initial Delay for Automatic Captures */
         private const val INITIAL_CAPTURE_DELAY = 2 * 1000L
     }
 
