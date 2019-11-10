@@ -27,8 +27,8 @@ sealed class CaptureTimeFrequency {
     object OneShot : CaptureTimeFrequency()
 
     /**
-     * A [CaptureTimeFrequency] option that specifies continuous captures.
-     * @param captureIntervalMillis the interval in milliseconds at with the captures will be performed
+     * A [CaptureTimeFrequency] option that specifies captures at regular intervals of
+     * [captureIntervalMillis] milliseconds.
      */
     class Recurring(val captureIntervalMillis: Long) : CaptureTimeFrequency()
 }

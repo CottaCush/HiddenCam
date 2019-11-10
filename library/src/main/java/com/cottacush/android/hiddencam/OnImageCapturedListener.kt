@@ -17,7 +17,21 @@ package com.cottacush.android.hiddencam
 
 import java.io.File
 
+/**
+ * [OnImageCapturedListener] serves as a listener for photo captures and photo capture errors.
+ * An implementation of [OnImageCapturedListener] should be provided for [HiddenCam].
+ * @see [onImageCaptured] and [onImageCaptureError].
+ */
 interface OnImageCapturedListener {
+
+    /**
+     * Listener for photo captures. This method is called whenever there is a new photo capture.
+     */
     fun onImageCaptured(image: File)
+
+    /**
+     * Listener for photo capture errors. This method is called whenever there is any
+     * photo capture error
+     */
     fun onImageCaptureError(e: Throwable?)
 }

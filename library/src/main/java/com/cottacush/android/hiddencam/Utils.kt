@@ -28,23 +28,40 @@ import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.Executor
 
+/** [DEFAULT_FILENAME] specifies the default file name for the photos captured */
 private const val DEFAULT_FILENAME = "yyyy-MM-dd-HH-mm-ss-SSS"
+
+/** [DEFAULT_PHOTO_EXTENSION] specifies the default file extension for the photos captured */
 private const val DEFAULT_PHOTO_EXTENSION = ".jpg"
+
+/** [requiredPermissions] specifies the list of permissions the library needs */
 private val requiredPermissions =
     arrayOf(Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE)
 
+/** A [CameraType] specifies the direction the camera being used for taking photos is facing.
+ *  [FRONT_CAMERA] or [BACK_CAMERA]
+ *  @param lensFacing specifies the direction of the lens of the camera*/
 enum class CameraType(val lensFacing: CameraX.LensFacing) {
+
+    /** A camera on the device facing the same direction as the device's screen */
     FRONT_CAMERA(CameraX.LensFacing.FRONT),
+
+    /** A camera on the device facing the opposite direction as the device's screen */
     BACK_CAMERA(CameraX.LensFacing.BACK)
 }
 
+/** [TargetAspectRatio] specifies the target [AspectRatio] of the photos taken. See [RATIO_4_3] and
+ *  [RATIO_16_9] */
 enum class TargetAspectRatio(val aspectRatio: AspectRatio) {
+
     /** 4:3 standard aspect ratio.  */
     RATIO_4_3(AspectRatio.RATIO_4_3),
+
     /** 16:9 standard aspect ratio.  */
     RATIO_16_9(AspectRatio.RATIO_16_9)
 }
 
+/** This creates a file in directory [baseDirectory] to write the captured photo in */
 internal fun createFile(
     baseDirectory: File
 ): File = File(
@@ -52,6 +69,7 @@ internal fun createFile(
         .format(System.currentTimeMillis()) + DEFAULT_PHOTO_EXTENSION
 )
 
+/** An extension function to check if all [requiredPermissions] are given */
 internal fun Context.hasPermissions(): Boolean {
     for (permission in requiredPermissions) {
         if (ContextCompat.checkSelfPermission(

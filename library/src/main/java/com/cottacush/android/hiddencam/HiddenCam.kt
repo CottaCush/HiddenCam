@@ -35,8 +35,14 @@ class HiddenCam(
     private lateinit var captureTimer: CaptureTimerHandler
     private val lifeCycleOwner = HiddenCamLifeCycleOwner()
 
-    //Preview UseCase
+    /**
+     * For some devices, if the camera doesn't have time to preview before the actual capture, it
+     * would result into an underexposed or overexposed photo. Hence, A [Preview] use case is set up
+     * which renders to a dummy surface.
+     */
     private var preview: Preview
+
+    /** Configures the camera for preview */
     private var previewConfig = PreviewConfig.Builder().apply {
         setLensFacing(cameraType.lensFacing)
         if (targetRotation != null) setTargetRotation(targetRotation)
@@ -44,8 +50,15 @@ class HiddenCam(
         if (targetResolution != null) setTargetResolution(targetResolution)
     }.build()
 
-    //Image Capture Usecase
+    /**
+     * An [ImageCapture] use case to capture photos.
+     */
     private var imageCapture: ImageCapture
+
+    /**
+     * Configures the camera for Image Capture. Basically, [preview] and [imageCapture] have the
+     * same configuration settings
+     */
     private var imageCaptureConfig: ImageCaptureConfig = ImageCaptureConfig.Builder()
         .apply {
             setLensFacing(cameraType.lensFacing)
@@ -54,6 +67,16 @@ class HiddenCam(
             if (targetAspectRatio != null) setTargetAspectRatio(targetAspectRatio.aspectRatio)
         }.build()
 
+
+    //TODO @rasheed, please check this. The links are not linking for this paticular doc
+    /**
+     * Checks if required permissions are available.
+     *
+     * @throws SecurityException if permissions aren't available.
+     *
+     * If permissions are available, new [Preview] and [ImageCapture] use cases are created from the
+     * given configuration. [CaptureTimeFrequency] is setup too.
+     */
     init {
         if (context.hasPermissions()) {
             imageCapture = ImageCapture(imageCaptureConfig)
@@ -77,27 +100,48 @@ class HiddenCam(
         } else throw SecurityException("You need to have access to both CAMERA and WRITE_EXTERNAL_STORAGE permissions")
     }
 
+    /**
+     * Mark [HiddenCam]'s lifecycle as started. If the kind [CaptureTimeFrequency] supplied is
+     * [Recurring], Automatic photo captures are triggered.
+     */
     fun start() {
         lifeCycleOwner.start()
         if (captureFrequency is Recurring) captureTimer.startUpdates()
     }
 
+    /**
+     * Mark [HiddenCam]'s lifecycle as stopped. If the kind of [CaptureTimeFrequency] supplied is
+     * [Recurring], Automatic photo captures are stopped.
+     */
     fun stop() {
         lifeCycleOwner.stop()
         if (captureFrequency is Recurring) captureTimer.stopUpdates()
     }
 
+    /**
+     * Mark [HiddenCam]'s lifecycle as destroyed. If the kind of [CaptureTimeFrequency] supplied is
+     * [Recurring], Automatic photo captures are stopped.
+     */
     fun destroy() {
         lifeCycleOwner.tearDown()
         if (captureFrequency is Recurring) captureTimer.stopUpdates()
     }
 
+    /**
+     * Method to manually trigger a photo capture.
+     * @see capture
+     */
     fun captureImage() {
         if (captureFrequency is OneShot) {
             capture()
         }
     }
 
+    /**
+     * Capture photo and save in [baseFileDirectory].
+     *
+     * @see OnImageCapturedListener
+     */
     private fun capture() {
         imageCapture.takePicture(createFile(baseFileDirectory), MainThreadExecutor,
             object : ImageCapture.OnImageSavedListener {
