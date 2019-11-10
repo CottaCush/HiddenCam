@@ -28,17 +28,17 @@ import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.Executor
 
-/** [DEFAULT_FILENAME] specifies the default file name for the photos captured */
+/** [DEFAULT_FILENAME] specifies the default file name for captured images */
 private const val DEFAULT_FILENAME = "yyyy-MM-dd-HH-mm-ss-SSS"
 
-/** [DEFAULT_PHOTO_EXTENSION] specifies the default file extension for the photos captured */
+/** [DEFAULT_PHOTO_EXTENSION] specifies the default file extension for the captured images */
 private const val DEFAULT_PHOTO_EXTENSION = ".jpg"
 
-/** [requiredPermissions] specifies the list of permissions the library needs */
+/** [requiredPermissions] specifies the list of permissions required by the library */
 private val requiredPermissions =
     arrayOf(Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE)
 
-/** A [CameraType] specifies the direction the camera being used for taking photos is facing.
+/** A [CameraType] specifies the direction the camera that will be used for taking image is facing.
  *  [FRONT_CAMERA] or [BACK_CAMERA]
  *  @param lensFacing specifies the direction of the lens of the camera*/
 enum class CameraType(val lensFacing: CameraX.LensFacing) {
@@ -50,7 +50,7 @@ enum class CameraType(val lensFacing: CameraX.LensFacing) {
     BACK_CAMERA(CameraX.LensFacing.BACK)
 }
 
-/** [TargetAspectRatio] specifies the target [AspectRatio] of the photos taken. See [RATIO_4_3] and
+/** [TargetAspectRatio] specifies the AspectRatio for the captured images. See [RATIO_4_3] and
  *  [RATIO_16_9] */
 enum class TargetAspectRatio(val aspectRatio: AspectRatio) {
 
@@ -61,7 +61,7 @@ enum class TargetAspectRatio(val aspectRatio: AspectRatio) {
     RATIO_16_9(AspectRatio.RATIO_16_9)
 }
 
-/** This creates a file in directory [baseDirectory] to write the captured photo in */
+/** This creates a file in directory [baseDirectory] to write a captured image */
 internal fun createFile(
     baseDirectory: File
 ): File = File(
@@ -69,7 +69,7 @@ internal fun createFile(
         .format(System.currentTimeMillis()) + DEFAULT_PHOTO_EXTENSION
 )
 
-/** An extension function to check if all [requiredPermissions] are given */
+/** An extension function to check if all [requiredPermissions] are granted */
 internal fun Context.hasPermissions(): Boolean {
     for (permission in requiredPermissions) {
         if (ContextCompat.checkSelfPermission(

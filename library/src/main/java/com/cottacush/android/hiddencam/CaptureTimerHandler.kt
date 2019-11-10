@@ -19,7 +19,7 @@ import android.os.Handler
 import android.os.Message
 
 /**
- * Handles automatic photo captures at regular intervals.
+ * Handles automatic image captures at regular intervals.
  *
  * @see CaptureTimeFrequency.Recurring
  */
@@ -36,7 +36,7 @@ internal class CaptureTimerHandler(
     }
 
     /**
-     * At each regular interval, next photo capture is triggered and next interval is queued
+     * At each regular interval, image capture is triggered and next capture is queued
      * @see queueNextCapture
      */
     override fun handleMessage(msg: Message) {
@@ -44,7 +44,9 @@ internal class CaptureTimerHandler(
         queueNextCapture(captureInterval)
     }
 
-    /** Removes current message and re-queue it with delay [captureInterval] */
+    /** Removes current message and re-queue it with a delay.
+     * @param delay the delay in millisecond.
+     * */
     private fun queueNextCapture(delay: Long) {
         removeMessages(UPDATE_TIMER_COMMAND)
         sendMessageDelayed(obtainMessage(UPDATE_TIMER_COMMAND), delay)
