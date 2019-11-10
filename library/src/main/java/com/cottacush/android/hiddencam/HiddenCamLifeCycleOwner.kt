@@ -19,6 +19,9 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LifecycleRegistry
 
+/**
+ * A [LifecycleOwner] to manage the Lifecycle of the camera engine.
+ */
 internal class HiddenCamLifeCycleOwner : LifecycleOwner {
 
     private val lifecycleRegistry: LifecycleRegistry = LifecycleRegistry(this)
