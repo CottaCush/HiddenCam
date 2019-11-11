@@ -22,7 +22,7 @@ import com.cottacush.android.hiddencam.CaptureTimeFrequency.OneShot
 import com.cottacush.android.hiddencam.CaptureTimeFrequency.Recurring
 import java.io.File
 
-class HiddenCam(
+class HiddenCam @JvmOverloads constructor(
     context: Context,
     private val baseFileDirectory: File,
     private val imageCapturedListener: OnImageCapturedListener,
