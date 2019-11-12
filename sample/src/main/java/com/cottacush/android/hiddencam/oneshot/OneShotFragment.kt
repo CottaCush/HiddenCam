@@ -53,7 +53,7 @@ class OneShotFragment : Fragment(), OnImageCapturedListener {
         }
         hiddenCam = HiddenCam(
             mainActivity, baseStorageFolder, this,
-            targetResolution = Size( 1080, 1920)
+            targetResolution = Size(1080, 1920)
         )
 
         captureButton.setOnClickListener {
