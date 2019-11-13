@@ -1,4 +1,3 @@
-// Set default
 ext.modulePackageId = ""
 
 if (!project.rootProject.file('local.properties').exists()) {
@@ -42,8 +41,8 @@ publish {
   groupId = 'com.cottacush'
   artifactId = 'HiddenCamera'
   publishVersion = versions.publishVersion
-  desc = 'A library ...'
-  website = 'https://github.com/CottaCush/...'
+  desc = 'A library that allows you to capture images secretly, in background without alerting users.'
+  website = 'https://github.com/CottaCush/HiddenCam'
   dryRun = false
 }
 
