@@ -1,17 +1,16 @@
 # HiddenCamera
 
-##  \[ 🚧 Work in progress 🛠 👷🔧👷‍♀️️🔧️ 🚧 \]
-
 A library that allows you to capture images secretly, in background without alerting users.
 
 [![Build Status](https://travis-ci.org/CottaCush/HiddenCam.svg?branch=master)](https://travis-ci.org/CottaCush/HiddenCam)
+[ ![Download](https://api.bintray.com/packages/cottacush/maven/HiddenCamera/images/download.svg) ](https://bintray.com/cottacush/maven/HiddenCamera/_latestVersion)
 
 ## Gradle Dependency
 
 Add the dependency to your app's `build.gradle`:
 
 ```groovy
-implementation 'com.cottacush:HiddenCamera:0.0.1'
+implementation 'com.cottacush:HiddenCamera:0.0.2'
 ```
 
 ## Usage
