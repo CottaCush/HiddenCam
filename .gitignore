@@ -26,6 +26,8 @@ build/
 
 # Signing files
 .signing/
+*/gpg-keys/
+*.gpg
 
 # Local configuration file (sdk path, etc)
 local.properties

@@ -1,0 +1,25 @@
+allprojects {
+    plugins.withId("com.vanniktech.maven.publish") {
+        mavenPublish {
+            sonatypeHost = "S01"
+        }
+    }
+}
+
+ext["signing.keyId"] = ''
+ext["signing.password"] = ''
+ext["signing.secretKeyRingFile"] = ''
+
+File secretPropsFile = project.rootProject.file('local.properties')
+if (secretPropsFile.exists()) {
+    Properties properties = new Properties()
+    new FileInputStream(secretPropsFile).withCloseable { is -> properties.load(is) }
+    properties.each { name, value -> ext[name] = value }
+} else {
+    // Use system environment variables
+    ext["signing.keyId"] = System.getenv('SIGNING_KEY_ID')
+    ext["signing.password"] = System.getenv('SIGNING_PASSWORD')
+    ext["signing.secretKeyRingFile"] = System.getenv('SIGNING_SECRET_KEY_RING_FILE')
+}
+
+ext.modulePackageId = versions.publishGroupID + '.' + versions.publishArtifactID
