@@ -5,21 +5,21 @@ buildscript {
 
   repositories {
     google()
-    jcenter()
+    mavenCentral()
   }
 
   dependencies {
     classpath 'com.android.tools.build:gradle:' + versions.gradlePlugin
     classpath "com.diffplug.spotless:spotless-plugin-gradle:" + versions.spotlessPlugin
-    classpath 'com.novoda:bintray-release:' + versions.bintrayRelease
     classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:' + versions.kotlin
+    classpath 'com.vanniktech:gradle-maven-publish-plugin:' + versions.mavenPublishPlugin
   }
 }
 
 allprojects {
   repositories {
     google()
-    jcenter()
+    mavenCentral()
   }
 
   tasks.withType(Javadoc).all {
