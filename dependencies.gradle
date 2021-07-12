@@ -4,7 +4,7 @@ ext.versions = [
         buildTools        : '30.0.2',
         publishGroupID    : 'com.cottacush',
         publishArtifactID : 'HiddenCam',
-        publishVersion    : '0.0.2',
+        publishVersion    : '0.0.3',
         publishVersionCode: 1,
 
         gradlePlugin      : '4.2.1',
