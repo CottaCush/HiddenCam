@@ -10,7 +10,7 @@ A library that allows you to capture images secretly, in background without aler
 Add the dependency to your app's `build.gradle`:
 
 ```groovy
-implementation 'com.cottacush:HiddenCamera:x.y.z'
+implementation 'com.cottacush:HiddenCam:x.y.z'
 ```
 For versions, kindly head over to the [releases page](https://github.com/CottaCush/HiddenCam/releases)
 
